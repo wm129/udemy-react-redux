@@ -1,17 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+/*StoreはactionがdispatchされるとReducerの呼び出しを
+処理する。
+createStore()によってStoreを作成する
+ex) const store = createStore(CombineReducerで作成したRootReducerを入れる)
 
+ */
+
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import rootReducer from './store/reducers';
+import { BrowserRouter as Router } from 'react-router-dom';
+import App from './App';
+
+const store = createStore(rootReducer, applyMiddleware(thunk, logger));
+/*createStore()では第二引数に初期状態を渡すことが可能！ */
+const rootElement = document.getElementById("root");
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Router>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </Router>,
+    rootElement
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
